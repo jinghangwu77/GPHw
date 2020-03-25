@@ -1,0 +1,119 @@
+var camera, scene, renderer;
+var puck;
+var pos, vel, force;
+var walls = [];
+var pucklight;
+
+<div id="info">hw2 helper</div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js">
+</script>
+
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00
+}
+
+body {
+  overflow: hidden;
+}
+
+init();
+animate();
+
+function init() {
+
+  scene = new THREE.Scene();
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x888888);
+  document.body.appendChild(renderer.domElement);
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.position.z = 500;
+  let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+ pucklight = new THREE.PointLight( 0x5cf2f2, 1,100);
+//light.position.set( 50, 50, 50 );
+scene.add( pucklight );
+
+var light = new THREE.AmbientLight( 0x202020 ); // soft white light
+scene.add( light );
+
+////////////////////////////////////////////////////////////////
+  var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
+  //scene.add(gridXZ);
+  
+  var floor = new THREE.Mesh (new THREE.PlaneGeometry(200,200), new THREE.MeshPhongMaterial());
+  scene.add (floor);
+  floor.rotation.x = -Math.PI/2;
+  
+  puck = new THREE.Mesh (new THREE.CylinderGeometry (15,15,4,20), new THREE.MeshBasicMaterial({color:0x5cf2f2}));
+  scene.add (puck)
+  puck.position.y = 2;
+  
+  /// boundary
+  wall = new THREE.Mesh (new THREE.BoxGeometry (10, 20,200), new THREE.MeshPhongMaterial());
+  scene.add (wall);
+
+	wall.position.set (105, 10, 0);
+  
+  wall.point = new THREE.Vector3(100,0,0);
+  wall.normal = new THREE.Vector3(-1,0,0);
+  walls.push (wall);
+  
+  wall = new THREE.Mesh (new THREE.BoxGeometry (10, 20,200), new THREE.MeshPhongMaterial());
+  scene.add (wall);
+  wall.position.set (-105, 10, 0);
+  
+  wall.point = new THREE.Vector3(-100,0,0);
+  wall.normal = new THREE.Vector3(1,0,0);
+  walls.push (wall);
+  
+  //////////////////
+  force = new THREE.Vector3(0,0,0);
+  vel = new THREE.Vector3(-5, 0, 0);
+  pos = new THREE.Vector3();
+  
+}
+
+function animate() {
+  var dt = 0.1;
+  var eps = 1e-3; // 0.001 
+  var cR = 1.0;
+  
+  // Euler's method
+  vel.add (force.clone().multiplyScalar(dt));
+  pos.add (vel.clone().multiplyScalar(dt));
+  puck.position.copy (pos);
+  puck.position.y += 2;
+  pucklight.position.copy (puck.position);
+  pucklight.position.y += 10;
+  
+  // collision detection
+  for (i = 0; i < walls.length; i++) {
+  	let wall = walls[i];
+  if (pos.clone().sub (wall.point).dot (wall.normal) < eps + 15) {
+    var vN = wall.normal.clone().multiplyScalar(vel.dot (wall.normal));
+    var vT = vel.clone().sub(vN);
+    // vel = vT + (- CR).vN
+    vel.copy (vT.add (vN.multiplyScalar(-cR) ));
+  }
+  }
+  
+  
+  requestAnimationFrame(animate);
+  render();
+
+}
+
+function render() {
+
+  renderer.render(scene, camera);
+
+}
