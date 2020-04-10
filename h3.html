@@ -22,6 +22,12 @@ body {
 </style>
 </head>
 <body>
+
+ <audio id="music" style="display:none">
+<source src="https://jinghangwu77.github.io/GPHw/music.mp3" type='audio/mp3'>
+</audio>
+
+
 <div id="info">minimal three.js</div>
 <script src="https://threejs.org/build/three.min.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js">
@@ -29,7 +35,9 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
 <script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/MTLLoader.js"></script>
 	<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/OBJLoader.js"></script>
-<script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+	<script>
 
 //<a href='https://www.minecraftskins.com/uploads/skins/2020/04/10/the-amazing-spider-man-14096237.png?v172'>The Amazing Spider-Man<br /><img src='https://www.minecraftskins.com/uploads/skins/2020/04/10/the-amazing-spider-man-14096237.png?v172' alt='The Amazing Spider-Man' border='0' /></a>
 
@@ -37,8 +45,11 @@ var camera, scene, renderer;
 var k = 5;
 var opc = 0.5;
 var head, arm, torso, leg, mine, theta=0;
-
+var music;
 var gcontrol;
+
+/////素材
+//手
 const head1 = new THREE.TextureLoader().load(
   'https://jinghangwu77.github.io/GPHw/image/head.png'
 )
@@ -57,9 +68,107 @@ const head3 = new THREE.TextureLoader().load(
 const head4 = new THREE.TextureLoader().load(
   'https://jinghangwu77.github.io/GPHw/image/head4.png'
 )
-// 苦力怕皮膚貼圖
-const skinMap = new THREE.TextureLoader().load(
+
+
+//身體
+const body1 = new THREE.TextureLoader().load(
   'https://jinghangwu77.github.io/GPHw/image/body.png'
+)
+const bodyside1 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/bodyside1.png'
+)
+const bodyside2 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/bodyside2.png'
+)
+const bodyback = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/bodyback.png'
+)
+const bodyup = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/bodyup.png'
+)
+const bodydown = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/bodydown.png'
+)
+
+//左手
+const handleft = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handleft.png'
+)
+const handleft2 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handleft2.png'
+)
+const handleft3 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handleft3.png'
+)
+const handleft4 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handleft4.png'
+)
+const handleftup = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/hru.png'
+)
+const handleftdown = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/hrd.png'
+)
+
+//右手
+const handright = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handright.png'
+)
+const handright2 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handright2.png'
+)
+const handright3 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handright3.png'
+)
+const handright4 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handright4.png'
+)
+const handrightup = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handrightup.png'
+)
+const handrightdown = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/handrightd.png'
+)
+
+//左腳
+const footleft = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/foodleft.png'
+)
+const footleft2 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/foodleft2.png'
+)
+const footleft3 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/foodleft3.png'
+)
+const footleft4 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/foodbackleft.png'
+)
+const footleftup = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/footleftup.png'
+)
+const footleftdown = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/footleftdown.png'
+)
+
+//右腳
+
+const footright = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/footright.png'
+)
+const footright2 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/footright2.png'
+)
+const footright3 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/footright3.png'
+)
+const footright4 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/footrightback.png'
+)
+const footrightup = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/fru.png'
+)
+const footrightdown = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/frd.png'
 )
 
 
@@ -100,7 +209,7 @@ var theObject;
 
 var mouseX = 0,
   mouseY = 0;
-
+var soundTrack;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 var controls;
@@ -118,7 +227,8 @@ init();
 animate();
 
 function init() {
-	
+  music = document.getElementById ('music');
+  
   scene = new THREE.Scene();
 
   renderer = new THREE.WebGLRenderer();
@@ -147,14 +257,14 @@ scene.add(Light)
   torso.position.y = 4.09*k;
   
   //////左手
-  leftarm = makeArm();
+  leftarm = makeArm(1);
   mine.add (leftarm);
   leftarm.position.set (1.26*k+0.62*k, 7.57*k, 0);
   scene.add (mine);
   
   
   //////左腳
-  leftleg = makeLeg();
+  leftleg = makeLeg(1);
   leftleg.position.set (0.63*k, 4.09*k, 0);
   mine.add (leftleg);
 
@@ -167,14 +277,14 @@ scene.add(Light)
   
   
   //////右手
-  rightarm = makeArm();
+  rightarm = makeArm(2);
   mine.add (rightarm);
   rightarm.position.set (-1.26*k-0.62*k, 7.57*k, 0);
   
   
   
-  //////左腳
-  rightleg = makeLeg();
+  //////右腳
+  rightleg = makeLeg(2);
   rightleg.position.set (-0.63*k, 4.09*k, 0);
   mine.add (rightleg);
 
@@ -208,7 +318,7 @@ const skinMat = new THREE.MeshStandardMaterial({
   transparent: true, // 透明與否
   opacity: 0.9, // 透明度
   side: THREE.DoubleSide, // 雙面材質
-  map: skinMap // 皮膚貼圖
+   // 皮膚貼圖
 })
 
 
@@ -224,44 +334,120 @@ var materials = [
 var mesh = new THREE.Mesh( geometry, materials );
  
  
- 
+ soundTrack.play();
  }
 
  
  
-function makeArm() {
-  var group = new THREE.Group();
-  var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
-  var body = new THREE.Mesh (new THREE.BoxGeometry(3.82*k, 1.24*k, 1.24*k), mat);
+function makeArm(side) {
+  if(side==1)//left
+  {
+    const lefthandMaterials = []
+	  for (let i = 0; i < 6; i++) {
+	  let map;
+	  if (i == 0) map = handleft;
+	  else if (i == 1) map = handleft4;
+	  else if (i == 2) map = handleftup;
+	  else if (i == 3) map = handleft2;
+	  else if (i == 4) map = handleft3;
+	  else if (i == 5) map = handleftdown;
+	  lefthandMaterials.push(new THREE.MeshBasicMaterial({ map: map }));
+	}
   
-  group.add (body);
-  body.position.x = 3.82*k/2;
-  group.add (new THREE.AxesHelper (k));
-	return group;
-
-
+   	var group = new THREE.Group();
+	  var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
+	  var body = new THREE.Mesh (new THREE.BoxGeometry(3.82*k, 1.24*k, 1.24*k), lefthandMaterials);
+	  
+	  group.add (body);
+	  body.position.x = 3.82*k/2;
+	  group.add (new THREE.AxesHelper (k));
+		return group;
+  }
+  else//right
+  {
+    const righthandMaterials = []
+	  for (let i = 0; i < 6; i++) {
+	  let map;
+	  if (i == 0) map = handright;
+	  else if (i == 1) map = handright4;
+	  else if (i == 2) map = handrightup;
+	  else if (i == 3) map = handright2;
+	  else if (i == 4) map = handright3;
+	  else if (i == 5) map = handrightdown;
+	  
+	  righthandMaterials.push(new THREE.MeshBasicMaterial({ map: map }));
+	}
+      var group = new THREE.Group();
+	  var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
+	  var body = new THREE.Mesh (new THREE.BoxGeometry(3.82*k, 1.24*k, 1.24*k), righthandMaterials);
+	  
+	  group.add (body);
+	  body.position.x = 3.82*k/2;
+	  group.add (new THREE.AxesHelper (k));
+		return group;
+  }
 }
-function makeLeg() {
-	var group = new THREE.Group();
-  var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
-  var body = new THREE.Mesh (new THREE.BoxGeometry(4.09*k, 1.26*k, 1.26*k), mat);
-  
-	group.add (body);
-  body.position.x = 4.09*k/2;
-  group.add (new THREE.AxesHelper (k));
+function makeLeg(side) {
+	if(side==1)
+	{
+	const leftfootMaterials = []
+	  for (let i = 0; i < 6; i++) {
+	  let map;
+	  if (i == 0) map = footleft;
+	  else if (i == 1) map = footleft4;
+	  else if (i == 2) map = footleftup;
+	  else if (i == 3) map = footleft2;
+	  else if (i == 4) map = footleft3;
+	  else if (i == 5) map = footleftdown;
+	  leftfootMaterials.push(new THREE.MeshBasicMaterial({ map: map }));
+	}
+      var group = new THREE.Group();
+	  var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
+	  var body = new THREE.Mesh (new THREE.BoxGeometry(4.09*k, 1.26*k, 1.26*k), leftfootMaterials);
+	  
+		group.add (body);
+	  body.position.x = 4.09*k/2;
+	  group.add (new THREE.AxesHelper (k));
 	return group;
+		}
 	
-
+	else
+	{
+	  const rightfootMaterials = []
+	  for (let i = 0; i < 6; i++) {
+	  let map;
+	  if (i == 0) map = footright;
+	  else if (i == 1) map = footright4;
+	  else if (i == 2) map = footrightup;
+	  else if (i == 3) map = footright2;
+	  else if (i == 4) map = footright3;
+	  else if (i == 5) map = footrightdown;
+	  rightfootMaterials.push(new THREE.MeshBasicMaterial({ map: map }));
+	  }
+	
+      var group = new THREE.Group();
+	  var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
+	  var body = new THREE.Mesh (new THREE.BoxGeometry(4.09*k, 1.26*k, 1.26*k), rightfootMaterials);
+	  
+		group.add (body);
+	  body.position.x = 4.09*k/2;
+	  group.add (new THREE.AxesHelper (k));
+	return group;
+	}
 }
 
 function makeHead() {
-  const headMaterials = [];
-  headMaterials.push(new THREE.MeshBasicMaterial({ map: headleft }));
-  headMaterials.push(new THREE.MeshBasicMaterial({ map: headr }));
-  headMaterials.push(new THREE.MeshBasicMaterial({ map: head2 }));
-  headMaterials.push(new THREE.MeshBasicMaterial({ map: head3 }));
-  headMaterials.push(new THREE.MeshBasicMaterial({ map: head4 }));
-  headMaterials.push(new THREE.MeshBasicMaterial({ map: head1 }));
+  const headMaterials = []
+  for (let i = 0; i < 6; i++) {
+  let map;
+  if (i == 0) map = headleft;
+  else if (i == 1) map = headr;
+  else if (i == 2) map = head2;
+  else if (i == 3) map = head3;
+  else if (i == 4) map = head4;
+  else if (i == 5) map = head1;
+  headMaterials.push(new THREE.MeshBasicMaterial({ map: map }));
+}
   var headGroup = new THREE.Group();
   var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
   var headBody = new THREE.Mesh (new THREE.BoxGeometry(2.52*k, 2.52*k, 2.52*k), headMaterials);
@@ -275,10 +461,20 @@ function makeHead() {
 }
 
 function makeTorso () {
-  
+  const bodyMaterials = []
+  for (let i = 0; i < 6; i++) {
+  let map;
+  if (i == 0) map = bodyside1;
+  else if (i == 1) map = bodyside2;
+  else if (i == 2) map = bodyup;
+  else if (i == 3) map = bodydown;
+  else if (i == 4) map = bodyback;
+  else if (i == 5) map = body1;
+  bodyMaterials.push(new THREE.MeshBasicMaterial({ map: map }));
+}
   var group = new THREE.Group();
   var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
-  var body = new THREE.Mesh (new THREE.BoxGeometry(2.52*k, 3.48*k, 1.26*k), mat);
+  var body = new THREE.Mesh (new THREE.BoxGeometry(2.52*k, 3.48*k, 1.26*k), bodyMaterials);
   
 	group.add (body);
   body.position.y = 3.48*k/2;
@@ -306,6 +502,7 @@ function keyframe(t) {
 function animate() {
 
 //	head.rotation.y = Math.PI/6;
+  music.play();
   keyframe(clock.getElapsedTime()); 
   leftarm.rotation.y = intKey[0]//gcontrol.theta1; //Math.PI/4;
   leftleg.rotation.y = intKey[1]//gcontrol.theta2;//-Math.PI/4;
