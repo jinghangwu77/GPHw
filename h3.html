@@ -27,7 +27,6 @@ body {
 <source src="https://jinghangwu77.github.io/GPHw/music.mp3" type='audio/mp3'>
 </audio>
 
-
 <div id="info">minimal three.js</div>
 <script src="https://threejs.org/build/three.min.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js">
@@ -37,6 +36,7 @@ body {
 	<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/OBJLoader.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
+
 	<script>
 
 //<a href='https://www.minecraftskins.com/uploads/skins/2020/04/10/the-amazing-spider-man-14096237.png?v172'>The Amazing Spider-Man<br /><img src='https://www.minecraftskins.com/uploads/skins/2020/04/10/the-amazing-spider-man-14096237.png?v172' alt='The Amazing Spider-Man' border='0' /></a>
@@ -45,6 +45,7 @@ var camera, scene, renderer;
 var k = 5;
 var opc = 0.5;
 var head, arm, torso, leg, mine, theta=0;
+var music;
 var music;
 var gcontrol;
 
@@ -228,7 +229,8 @@ animate();
 
 function init() {
   music = document.getElementById ('music');
-  
+  music.volume = 0.1;
+  music.play();
   scene = new THREE.Scene();
 
   renderer = new THREE.WebGLRenderer();
@@ -334,7 +336,7 @@ var materials = [
 var mesh = new THREE.Mesh( geometry, materials );
  
  
- soundTrack.play();
+
  }
 
  
@@ -502,7 +504,7 @@ function keyframe(t) {
 function animate() {
 
 //	head.rotation.y = Math.PI/6;
-  music.play();
+  
   keyframe(clock.getElapsedTime()); 
   leftarm.rotation.y = intKey[0]//gcontrol.theta1; //Math.PI/4;
   leftleg.rotation.y = intKey[1]//gcontrol.theta2;//-Math.PI/4;
