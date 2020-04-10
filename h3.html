@@ -39,6 +39,29 @@ var opc = 0.5;
 var head, arm, torso, leg, mine, theta=0;
 
 var gcontrol;
+const head1 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/head.png'
+)
+const headleft = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/headleft.png'
+)
+const headr = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/headr.png'
+)
+const head2 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/head2.png'
+)
+const head3 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/head3.png'
+)
+const head4 = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/head4.png'
+)
+// 苦力怕皮膚貼圖
+const skinMap = new THREE.TextureLoader().load(
+  'https://jinghangwu77.github.io/GPHw/image/body.png'
+)
+
 
 ////////////////////
 var theta1 = 0,
@@ -112,9 +135,9 @@ function init() {
   scene.add(gridXZ);
   //man=readModel();
  //Teacher();
-let pointLight = new THREE.PointLight(0xffffff)
-pointLight.position.set(10, 10, -10)
-scene.add(pointLight)  
+let Light = new THREE.Light(0xffffff)
+Light.position.set(10, 10, 10)
+scene.add(Light)  
 ////////////////
 	mine = new THREE.Group();
 	head = makeHead();
@@ -178,14 +201,6 @@ scene.add(pointLight)
 
   
   /////////////////////////
-  const headMap = new THREE.TextureLoader().load(
-  'image/body.png'
-)
-// 苦力怕皮膚貼圖
-const skinMap = new THREE.TextureLoader().load(
-  'https://dl.dropboxusercontent.com/s/eev6wxdxfmukkt8/creeper_skin.png'
-)
-
 // 身體與腳的材質設定
 const skinMat = new THREE.MeshStandardMaterial({
   roughness: 0.3, // 粗糙度
@@ -196,19 +211,7 @@ const skinMat = new THREE.MeshStandardMaterial({
   map: skinMap // 皮膚貼圖
 })
 
-// 準備頭部與臉的材質
-const headMaterials = []
-for (let i = 0; i < 6; i++) {
-  let map
 
-  if (i === 4) map = headMap
-  else map = skinMap
-
-  headMaterials.push(new THREE.MeshStandardMaterial({ map: map }))
-}
-
-// 頭
-this.head = new THREE.Mesh(head, headMaterials)
  var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
 var materials = [
 	new THREE.MeshDepthMaterial(),
@@ -247,23 +250,33 @@ function makeLeg() {
   body.position.x = 4.09*k/2;
   group.add (new THREE.AxesHelper (k));
 	return group;
-
+	
 
 }
 
 function makeHead() {
-	var headGroup = new THREE.Group();
+  const headMaterials = [];
+  headMaterials.push(new THREE.MeshBasicMaterial({ map: headleft }));
+  headMaterials.push(new THREE.MeshBasicMaterial({ map: headr }));
+  headMaterials.push(new THREE.MeshBasicMaterial({ map: head2 }));
+  headMaterials.push(new THREE.MeshBasicMaterial({ map: head3 }));
+  headMaterials.push(new THREE.MeshBasicMaterial({ map: head4 }));
+  headMaterials.push(new THREE.MeshBasicMaterial({ map: head1 }));
+  var headGroup = new THREE.Group();
   var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
-  var headBody = new THREE.Mesh (new THREE.BoxGeometry(2.52*k, 2.52*k, 2.52*k), mat);
+  var headBody = new THREE.Mesh (new THREE.BoxGeometry(2.52*k, 2.52*k, 2.52*k), headMaterials);
   
-	headGroup.add (headBody);
+  headGroup.add (headBody);
   headBody.position.y = 2.52*k/2;
   headGroup.add (new THREE.AxesHelper (k));
+  
+// 頭
 	return headGroup;
 }
 
 function makeTorso () {
-	var group = new THREE.Group();
+  
+  var group = new THREE.Group();
   var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
   var body = new THREE.Mesh (new THREE.BoxGeometry(2.52*k, 3.48*k, 1.26*k), mat);
   
