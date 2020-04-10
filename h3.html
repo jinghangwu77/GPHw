@@ -31,6 +31,8 @@ body {
 	<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/OBJLoader.js"></script>
 <script>
 
+//<a href='https://www.minecraftskins.com/uploads/skins/2020/04/10/the-amazing-spider-man-14096237.png?v172'>The Amazing Spider-Man<br /><img src='https://www.minecraftskins.com/uploads/skins/2020/04/10/the-amazing-spider-man-14096237.png?v172' alt='The Amazing Spider-Man' border='0' /></a>
+
 var camera, scene, renderer;
 var k = 5;
 var opc = 0.5;
@@ -109,8 +111,10 @@ function init() {
   var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
   scene.add(gridXZ);
   //man=readModel();
- Teacher();
-  
+ //Teacher();
+let pointLight = new THREE.PointLight(0xffffff)
+pointLight.position.set(10, 10, -10)
+scene.add(pointLight)  
 ////////////////
 	mine = new THREE.Group();
 	head = makeHead();
@@ -171,8 +175,57 @@ function init() {
   
   gui.add(gcontrol, 'theta1', -0.8, 0.5);
   gui.add(gcontrol, 'theta2', -0.8, 0.8);
+
+  
+  /////////////////////////
+  const headMap = new THREE.TextureLoader().load(
+  'image/body.png'
+)
+// 苦力怕皮膚貼圖
+const skinMap = new THREE.TextureLoader().load(
+  'https://dl.dropboxusercontent.com/s/eev6wxdxfmukkt8/creeper_skin.png'
+)
+
+// 身體與腳的材質設定
+const skinMat = new THREE.MeshStandardMaterial({
+  roughness: 0.3, // 粗糙度
+  metalness: 0.8, // 金屬感
+  transparent: true, // 透明與否
+  opacity: 0.9, // 透明度
+  side: THREE.DoubleSide, // 雙面材質
+  map: skinMap // 皮膚貼圖
+})
+
+// 準備頭部與臉的材質
+const headMaterials = []
+for (let i = 0; i < 6; i++) {
+  let map
+
+  if (i === 4) map = headMap
+  else map = skinMap
+
+  headMaterials.push(new THREE.MeshStandardMaterial({ map: map }))
 }
 
+// 頭
+this.head = new THREE.Mesh(head, headMaterials)
+ var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+var materials = [
+	new THREE.MeshDepthMaterial(),
+	new THREE.MeshNormalMaterial(),
+	new THREE.MeshBasicMaterial( { wireframe: true } ),
+	new THREE.MeshLambertMaterial( { color: 0xff0000 } ),
+	new THREE.MeshPhongMaterial( { color: 0x0000ff } ),
+	new THREE.MeshStandardMaterial( { color: 0x00ff00 } ),
+];
+var mesh = new THREE.Mesh( geometry, materials );
+ 
+ 
+ 
+ }
+
+ 
+ 
 function makeArm() {
   var group = new THREE.Group();
   var mat = new THREE.MeshNormalMaterial({transparent:true, opacity:opc});
@@ -302,63 +355,6 @@ function loadJSON() {
 // wrap an Object3D around the given object
 // so that it is centered at +Y axis
 // 
-function Teacher( targetSize=20) {
-
-  var onProgress = function(xhr) {
-    if (xhr.lengthComputable) {
-      var percentComplete = xhr.loaded / xhr.total * 100;
-      console.log(Math.round(percentComplete, 2) + '% downloaded');
-    }
-  };
-
-  var onError = function(xhr) {};
-
-  var mtlLoader = new THREE.MTLLoader();
-  mtlLoader.setPath('https://nallyhuang.github.io/threeJS/model/');
-  mtlLoader.load('1337 iMac'+'.mtl', function(materials) {
-
-    materials.preload();
-
-    var objLoader = new THREE.OBJLoader();
-    objLoader.setMaterials(materials);
-    objLoader.setPath('https://nallyhuang.github.io/threeJS/model/');
-    objLoader.load('1337 iMac'+'.obj', function(object) {
-		
-	    var teacher =  unitize (object, targetSize);
-		//if(teacher != undefine)do teacher animate;
-	    teacher.name = 'OBJ'
-        scene.add(teacher);
-		teacher.traverse( function ( child ) {
-    if ( child instanceof THREE.Mesh ) {
-      child.castShadow = true;
-    }
-});
-    }, onProgress, onError);
-
-  });
-
-}
-function unitize (object, targetSize) {  
-	
-	var box3 = new THREE.Box3();
-	box3.setFromObject (object);
-	var size = new THREE.Vector3();
-	size.subVectors (box3.max, box3.min);
-	var center = new THREE.Vector3();
-	center.addVectors(box3.max, box3.min).multiplyScalar (0.5);
-
-	var objSize = Math.max (size.x, size.y, size.z);
-	var scaleSet = targetSize/objSize;
-				
-	var theObject =  new THREE.Object3D();
-
-	theObject.add (object);
-	object.scale.set (scaleSet, scaleSet, scaleSet);
-	object.position.set (-center.x*scaleSet, -center.y*scaleSet, -center.z*scaleSet);
-    
-	return theObject;
-			
-}
 
 function render() {
 
