@@ -170,26 +170,16 @@ function addMarkerHiro(){
 	myWrap.add (ttumesh);
 	
 	//背景
-	var textmaterial = new THREE.MeshBasicMaterial({  
-		color: 0xffff00,
-	});
-	var loader = new THREE.FontLoader();
-	loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
-	var geometry = new THREE.TextGeometry( '恭喜畢業!', {
-		font: font,
-		size: 80,
-		height: 5,
-		curveSegments: 12,
-		bevelEnabled: true,
-		bevelThickness: 10,
-		bevelSize: 8,
-		bevelOffset: 0,
-		bevelSegments: 5
-		} );
-	} );
-	var textmaterial	= new THREE.MeshBasicMaterial();
 	
-	var textmesh = new THREE.Mesh( geometry, textmaterial);
+	var textgeometry	= new THREE.PlaneGeometry(4,1)
+	l.crossOrigin='';
+	var text_p=l.load('text.png');
+	var textmaterial	= new THREE.MeshBasicMaterial({
+		map:text_p,
+		alphaTest: 0.5,
+		side: THREE.DoubleSide
+	});
+	var textmesh	= new THREE.Mesh( textgeometry, textmaterial );
 	textmesh.position.z = 0.7;
 	textmesh.position.y = 0.5;
 	myWrap.add(textmesh);
