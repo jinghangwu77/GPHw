@@ -138,7 +138,7 @@ function addMarkerHiro(){
 	//大同寶寶
 	
 	//背景
-	var ttugeometry	= new THREE.PlaneGeometry(15,10)
+	var ttugeometry	= new THREE.PlaneGeometry(10,7)
 	l.crossOrigin='';
 	var ttu_p=l.load('ttu.png');
 	var ttumaterial	= new THREE.MeshBasicMaterial({
@@ -157,7 +157,7 @@ function addMarkerHiro(){
 	var T=THREE_Text.SpriteText2D;
 	var Align=THREE_Text.textAlign;
 	
-	sprite=new T("Test"),{
+	sprite=new T("畢業快樂"),{
 		align: Align.center,
 		font:'60px',
 		fillStyle:'red',
@@ -193,7 +193,7 @@ function animate() {
 	 sprite.position.y += 1.5;
 	 sprite.position.z += 10.5;
 	 sprite.material.visible = markerHiro.visible;
-	 sprite.text = '我畢業了!!!!'
+	 //sprite.text = '我畢業了!!!!'
 	
 }
 
