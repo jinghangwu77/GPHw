@@ -187,9 +187,9 @@ function addMarkerHiro(){
 		bevelSegments: 5
 		} );
 	} );
-	var textumaterial	= new THREE.MeshBasicMaterial();
+	var textmaterial	= new THREE.MeshBasicMaterial();
 	
-	var textmesh = new THREE.Mesh(textgeometry,textmaterial);
+	var textmesh = new THREE.Mesh( textgeometry, textmaterial);
 	textmesh.position.z = 0.7;
 	textmesh.position.y = 0.5;
 	myWrap.add(textmesh);
