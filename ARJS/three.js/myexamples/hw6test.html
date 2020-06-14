@@ -17,7 +17,6 @@
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
 <div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
-<!--螢幕上顯示的字-->
 	 - three.js mobile performance<br>
 Minimal Version
 </div>
@@ -122,50 +121,53 @@ function addMarkerHiro(){
 
 	// add a torus knot & a transparent box
 	//大同寶寶
-	var loader = new THREE.TextureLoader();
-	var geometry	= new THREE.PlaneGeometry(2,3,32)
-	var text;
-	loader.crossOrigin='';
-	text=loader.load('ttubaby.png');
-	var material	= new THREE.MeshBasicMaterial({
-		map:text,
+	var l = new THREE.TextureLoader();
+	
+	var babygeometry = new THREE.PlaneGeometry(2,3.5)
+	l.crossOrigin='';
+	var ttubaby_p= l.load('ttubaby.png'); 
+	var babymaterial	= new THREE.MeshBasicMaterial({
+		map:ttubaby_p,
 		alphaTest: 0.5,
 		side: THREE.DoubleSide
 	});
-	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.z=0.5;
-	mesh.position.y	= 0.5;
-	myWrap.add (mesh);
+	var babymesh = new THREE.Mesh( babygeometry, babymaterial );
+	babymesh.position.z=0.5;
+	babymesh.position.y	= 0.5;
+	myWrap.add (babymesh);
 	//大同寶寶
+	
 	//背景
-	var geometry2	= new THREE.PlaneGeometry(20,10,32)
-	var text2;
-	loader.crossOrigin='';
-	text2=loader.load('ttu.png');
-	var material2	= new THREE.MeshBasicMaterial({
-		map:text2,
+	var ttugeometry	= new THREE.PlaneGeometry(15,10)
+	l.crossOrigin='';
+	var ttu_p=l.load('ttu.png');
+	var ttumaterial	= new THREE.MeshBasicMaterial({
+		map:ttu_p,
 		alphaTest: 0.5,
 		side: THREE.DoubleSide
 	});
-	var mesh2	= new THREE.Mesh( geometry2, material2 );
-	mesh2.position.z=-1;
-	mesh2.position.y	= 0.5;
-	myWrap.add (mesh2);
+	var ttumesh	= new THREE.Mesh( ttugeometry, ttumaterial );
+	ttumesh.position.z=-1;
+	ttumesh.position.y=0.5;
+	myWrap.add (ttumesh);
+	
 	//背景
+	
 	//字
 	var T=THREE_Text.SpriteText2D;
 	var Align=THREE_Text.textAlign;
 	
 	sprite=new T("Test"),{
 		align: Align.center,
-		font:'40px',
-		fillStyle:'blue',
+		font:'60px',
+		fillStyle:'red',
 		antialias: true
 	}
 	sprite.position.set(0,0,0);
 	sprite.scale.set(.015,.015,.015);
 	myWrap.add(sprite)
 	//字
+	
 	//markerRoot.add (mesh);
 
 
