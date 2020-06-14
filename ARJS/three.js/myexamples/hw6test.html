@@ -173,12 +173,26 @@ function addMarkerHiro(){
 	var textmaterial = new THREE.MeshBasicMaterial({  
 		color: 0xffff00,
 	});
-	var textmesh = new THREE.Mesh(new THREE.TextGeometry("畢業快樂", {
-	size: 5,
-	height: 5
-	}), textmaterial);
-	myWrap.add(textmesh);
+	var loader = new THREE.FontLoader();
+	loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+	var textgeometry = new THREE.TextGeometry( '恭喜畢業!', {
+		font: font,
+		size: 80,
+		height: 5,
+		curveSegments: 12,
+		bevelEnabled: true,
+		bevelThickness: 10,
+		bevelSize: 8,
+		bevelOffset: 0,
+		bevelSegments: 5
+		} );
+	} );
+	var textumaterial	= new THREE.MeshBasicMaterial();
 	
+	var textmesh = new THREE.Mesh(textgeometry,textmaterial);
+	textmesh.position.z = 0.7;
+	textmesh.position.y = 0.5;
+	myWrap.add(textmesh);
 	//字
 	var T=THREE_Text.SpriteText2D;
 	var Align=THREE_Text.textAlign;
