@@ -123,7 +123,7 @@ function addMarkerHiro(){
 	//大同寶寶
 	var l = new THREE.TextureLoader();
 	
-	var babygeometry = new THREE.PlaneGeometry(2,3.5)
+	var babygeometry = new THREE.PlaneGeometry(1,2)
 	l.crossOrigin='';
 	var ttubaby_p= l.load('ttubaby.png'); 
 	var babymaterial	= new THREE.MeshBasicMaterial({
@@ -132,13 +132,31 @@ function addMarkerHiro(){
 		side: THREE.DoubleSide
 	});
 	var babymesh = new THREE.Mesh( babygeometry, babymaterial );
-	babymesh.position.z=0.5;
+	babymesh.position.z = 0.5;
 	babymesh.position.y	= 0.5;
 	myWrap.add (babymesh);
 	//大同寶寶
 	
+	//me
+
+	var megeometry = new THREE.PlaneGeometry(1,2)
+	l.crossOrigin='';
+	var me_p= l.load('me.png'); 
+	var mematerial	= new THREE.MeshBasicMaterial({
+		map:me_p,
+		alphaTest: 0.5,
+		side: THREE.DoubleSide
+	});
+	var memesh = new THREE.Mesh( megeometry, mematerial );
+	memesh.position.x = 1;
+	memesh.position.z = 0.5;
+	memesh.position.y = 0.5;
+	myWrap.add (memesh);
+	//大同寶寶
+	
+	
 	//背景
-	var ttugeometry	= new THREE.PlaneGeometry(10,7)
+	var ttugeometry	= new THREE.PlaneGeometry(7,5)
 	l.crossOrigin='';
 	var ttu_p=l.load('ttu.png');
 	var ttumaterial	= new THREE.MeshBasicMaterial({
