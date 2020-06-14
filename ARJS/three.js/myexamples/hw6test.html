@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<!-- three.js library -->
+<script src='../examples/vendor/three.js/build/three.min.js'></script>
+<script src="../examples/vendor/three.js/examples/js/libs/stats.min.js"></script>
+<script src="https://rawgit.com/jyunming-chen/tutsplus/master/js/text2D.js"></script>
+<!-- ar.js -->
+<script src="../build/ar.js"></script>
+<!-- include threex.artoolkit -->
+<script src="../src/threex/threex-artoolkitsource.js"></script>
+<script src="../src/threex/threex-artoolkitcontext.js"></script>
+<script src="../src/threex/threex-artoolkitprofile.js"></script>
+<script src="../src/threex/threex-arbasecontrols.js"></script>
+<script src="../src/threex/threex-armarkercontrols.js"></script>
+<script src="../src/threex/threex-armarkercloak.js"></script>
+<script>THREEx.ArToolkitContext.baseURL = '../'</script>
+
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+<div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
+<!--螢幕上顯示的字-->
+	 - three.js mobile performance<br>
+Minimal Version
+</div>
+
+<script>
+
+// global variables
+var renderer, scene, camera;
+var stats;
+var arToolKitSource, arToolKitContext;
+var markerHiro;
+
+init();
+animate();
+
+function init() {
+
+	// init renderer
+	renderer	= new THREE.WebGLRenderer({
+		// antialias	: true,
+		alpha: true
+	});
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+	// renderer.setPixelRatio( 1/2 );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.domElement.style.position = 'absolute'
+	renderer.domElement.style.top = '0px'
+	renderer.domElement.style.left = '0px'
+	document.body.appendChild( renderer.domElement );
+
+	stats = new Stats();
+	document.body.appendChild( stats.dom );
+
+	// init scene and camera
+	scene	= new THREE.Scene();
+
+	// Create a BASIC camera
+	camera = new THREE.Camera();
+	scene.add(camera);
+
+	////////////////////////////////////////////////////////////////////////////////
+	//          handle arToolkitSource
+	////////////////////////////////////////////////////////////////////////////////
+
+	arToolkitSource = new THREEx.ArToolkitSource({
+		// to read from the webcam
+		sourceType : 'webcam',
+	})
+
+	arToolkitSource.init(function onReady(){
+		onResize()
+	})
+
+	// handle resize
+	window.addEventListener('resize', function(){
+		onResize()
+	})
+	function onResize(){
+		arToolkitSource.onResize()
+		arToolkitSource.copySizeTo(renderer.domElement)
+		if( arToolkitContext.arController !== null ){
+			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)
+		}
+	}
+	////////////////////////////////////////////////////////////////////////////////
+	//          initialize arToolkitContext
+	////////////////////////////////////////////////////////////////////////////////
+
+	arToolkitContext = new THREEx.ArToolkitContext({
+		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
+		detectionMode: 'mono',
+		maxDetectionRate: 30,
+		canvasWidth: 80*3,
+		canvasHeight: 60*3,
+	})
+	// initialize it
+	arToolkitContext.init(function onCompleted(){
+		// copy projection matrix to camera
+		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+	})
+
+	markerHiro = addMarkerHiro();
+	scene.add (markerHiro);
+
+	var light = new THREE.PointLight( 0xffffff, 1, 100 );
+light.position.set( 5, 5, 5 );
+scene.add( light );
+
+}
+
+function addMarkerHiro(){
+	let markerRoot = new THREE.Group()
+
+	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+		type : 'pattern',
+		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/pattern-marker.patt'
+	})
+
+	// need to add a WRAP ...
+	let myWrap = new THREE.Group()
+	markerRoot.add (myWrap)
+
+	// add a torus knot & a transparent box
+	//大同寶寶
+	var loader = new THREE.TextureLoader();
+	var geometry	= new THREE.PlaneGeometry(2,3,32)
+	var text;
+	loader.crossOrigin='';
+	text=loader.load('ttubaby.png');
+	var material	= new THREE.MeshBasicMaterial({
+		map:text,
+		alphaTest: 0.5,
+		side: THREE.DoubleSide
+	});
+	var mesh	= new THREE.Mesh( geometry, material );
+	mesh.position.z=0.5;
+	mesh.position.y	= 0.5;
+	myWrap.add (mesh);
+	//大同寶寶
+	//背景
+	var geometry2	= new THREE.PlaneGeometry(20,10,32)
+	var text2;
+	loader.crossOrigin='';
+	text2=loader.load('ttu.png');
+	var material2	= new THREE.MeshBasicMaterial({
+		map:text2,
+		alphaTest: 0.5,
+		side: THREE.DoubleSide
+	});
+	var mesh2	= new THREE.Mesh( geometry2, material2 );
+	mesh2.position.z=-1;
+	mesh2.position.y	= 0.5;
+	myWrap.add (mesh2);
+	//背景
+	//字
+	var T=THREE_Text.SpriteText2D;
+	var Align=THREE_Text.textAlign;
+	
+	sprite=new T("Test"),{
+		align: Align.center,
+		font:'40px',
+		fillStyle:'blue',
+		antialias: true
+	}
+	sprite.position.set(0,0,0);
+	sprite.scale.set(.015,.015,.015);
+	myWrap.add(sprite)
+	//字
+	//markerRoot.add (mesh);
+
+
+	myWrap.scale.set (0.5,0.5,0.5);
+
+
+	return markerRoot;
+}
+
+
+function animate() {
+	requestAnimationFrame (animate);
+	stats.update();
+
+	if( arToolkitSource.ready === false )	return
+	arToolkitContext.update( arToolkitSource.domElement )
+	//markerHiro.children[0].rotation.y += 0.1;
+
+	renderer.render (scene, camera);
+	// using SpriteText
+	 sprite.position.copy (markerHiro.position)
+	 //console.log (sprite.position.x + ',' + sprite.position.y + ',' + sprite.position.z) 
+	 sprite.position.y += 1.5;
+	 sprite.position.z += 10.5;
+	 sprite.material.visible = markerHiro.visible;
+	 sprite.text = '我畢業了!!!!'
+	
+}
+
+</script></body>
