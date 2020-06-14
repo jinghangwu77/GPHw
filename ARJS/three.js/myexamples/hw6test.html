@@ -175,7 +175,7 @@ function addMarkerHiro(){
 	});
 	var loader = new THREE.FontLoader();
 	loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
-	var textgeometry = new THREE.TextGeometry( '恭喜畢業!', {
+	var geometry = new THREE.TextGeometry( '恭喜畢業!', {
 		font: font,
 		size: 80,
 		height: 5,
@@ -189,7 +189,7 @@ function addMarkerHiro(){
 	} );
 	var textmaterial	= new THREE.MeshBasicMaterial();
 	
-	var textmesh = new THREE.Mesh( textgeometry, textmaterial);
+	var textmesh = new THREE.Mesh( geometry, textmaterial);
 	textmesh.position.z = 0.7;
 	textmesh.position.y = 0.5;
 	myWrap.add(textmesh);
